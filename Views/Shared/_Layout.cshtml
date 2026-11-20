@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] - Clubes Deportivos</title>
+    <link rel="stylesheet" href="~/css/estilos.css">
+</head>
+<body>
+    <header>
+        <h1>Gestión de Clubes Deportivos</h1>
+        <p>C# con ASP.NET Core y SQL Server</p>
+        <nav>
+            <a asp-controller="Clubes" asp-action="Index">Clubes</a>
+            <a asp-controller="Miembros" asp-action="Index">Miembros</a>
+            <a asp-controller="Registros" asp-action="Index">Registros</a>
+        </nav>
+    </header>
+
+    <main>
+        @if (TempData["Mensaje"] != null)
+        {
+            <p class="mensaje">@TempData["Mensaje"]</p>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <p class="error">@TempData["Error"]</p>
+        }
+        @if (ViewBag.Error != null)
+        {
+            <p class="error">@ViewBag.Error</p>
+        }
+
+        @if (ViewBag.SinConexion == true)
+        {
+            <p class="error">No se pudo conectar con la base de datos. Verifique que SQL Server esté iniciado y que se haya ejecutado el archivo base_datos.sql.</p>
+            IgnoreBody();
+        }
+        else
+        {
+            @RenderBody()
+        }
+    </main>
+
+    <footer>
+        <p>Danny Javier López Contreras – Aplicaciones Web, Semana 4 – 2026</p>
+    </footer>
+</body>
+</html>

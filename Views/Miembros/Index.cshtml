@@ -1,0 +1,77 @@
+@model Miembro
+@{
+    ViewData["Title"] = "Miembros";
+    var miembros = ViewBag.Miembros as List<Miembro> ?? new List<Miembro>();
+    var editando = Model.MiembroId != 0;
+}
+<section>
+    <h2>@(editando ? "Editar miembro" : "Registrar miembro")</h2>
+    <form asp-action="Guardar" method="post">
+        <input type="hidden" asp-for="MiembroId">
+        <div class="campos">
+            <div>
+                <label asp-for="Nombre"></label>
+                <input asp-for="Nombre" maxlength="60">
+                <span asp-validation-for="Nombre" class="error"></span>
+            </div>
+            <div>
+                <label asp-for="Apellido"></label>
+                <input asp-for="Apellido" maxlength="60">
+                <span asp-validation-for="Apellido" class="error"></span>
+            </div>
+            <div>
+                <label asp-for="Email"></label>
+                <input asp-for="Email" type="email" maxlength="100">
+                <span asp-validation-for="Email" class="error"></span>
+            </div>
+            <div>
+                <label asp-for="Telefono"></label>
+                <input asp-for="Telefono" maxlength="10">
+                <span asp-validation-for="Telefono" class="error"></span>
+            </div>
+        </div>
+        <button type="submit">@(editando ? "Actualizar" : "Guardar")</button>
+    </form>
+
+    @if (editando)
+    {
+        <p><a asp-action="Index">Cancelar</a></p>
+    }
+</section>
+
+<section>
+    <h2>Lista de miembros</h2>
+    @if (miembros.Count == 0)
+    {
+        <p>No hay miembros registrados.</p>
+    }
+    else
+    {
+        <div class="tabla">
+            <table>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Email</th>
+                    <th>Teléfono</th>
+                    <th>Acciones</th>
+                </tr>
+                @foreach (var m in miembros)
+                {
+                    <tr>
+                        <td>@m.Nombre</td>
+                        <td>@m.Apellido</td>
+                        <td>@m.Email</td>
+                        <td>@m.Telefono</td>
+                        <td class="acciones">
+                            <a asp-action="Index" asp-route-editar="@m.MiembroId">Editar</a>
+                            <form asp-action="Eliminar" asp-route-id="@m.MiembroId" method="post" onsubmit="return confirm('¿Desea eliminar este miembro? También se eliminarán sus registros.');">
+                                <button type="submit">Eliminar</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+    }
+</section>

@@ -1,0 +1,79 @@
+@model Club
+@{
+    ViewData["Title"] = "Clubes";
+    var clubes = ViewBag.Clubes as List<Club> ?? new List<Club>();
+    var editando = Model.ClubId != 0;
+}
+<section>
+    <h2>@(editando ? "Editar club" : "Registrar club")</h2>
+    <form asp-action="Guardar" method="post">
+        <input type="hidden" asp-for="ClubId">
+        <div class="campos">
+            <div>
+                <label asp-for="Nombre"></label>
+                <input asp-for="Nombre" maxlength="100">
+                <span asp-validation-for="Nombre" class="error"></span>
+            </div>
+            <div>
+                <label asp-for="Deporte"></label>
+                <input asp-for="Deporte" maxlength="50">
+                <span asp-validation-for="Deporte" class="error"></span>
+            </div>
+            <div>
+                <label asp-for="Ubicacion"></label>
+                <input asp-for="Ubicacion" maxlength="150">
+                <span asp-validation-for="Ubicacion" class="error"></span>
+            </div>
+            <div>
+                <label asp-for="FechaFundacion"></label>
+                <input asp-for="FechaFundacion">
+                <span asp-validation-for="FechaFundacion" class="error"></span>
+            </div>
+        </div>
+        <button type="submit">@(editando ? "Actualizar" : "Guardar")</button>
+    </form>
+
+    @if (editando)
+    {
+        <p><a asp-action="Index">Cancelar</a></p>
+    }
+</section>
+
+<section>
+    <h2>Lista de clubes</h2>
+    @if (clubes.Count == 0)
+    {
+        <p>No hay clubes registrados.</p>
+    }
+    else
+    {
+        <div class="tabla">
+            <table>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Deporte</th>
+                    <th>Ubicación</th>
+                    <th>Fecha de fundación</th>
+                    <th>Miembros</th>
+                    <th>Acciones</th>
+                </tr>
+                @foreach (var c in clubes)
+                {
+                    <tr>
+                        <td>@c.Nombre</td>
+                        <td>@c.Deporte</td>
+                        <td>@c.Ubicacion</td>
+                        <td>@c.FechaFundacion?.ToString("dd/MM/yyyy")</td>
+                        <td>@c.TotalMiembros</td>
+                        <td class="acciones">
+                            <a asp-action="Index" asp-route-editar="@c.ClubId">Editar</a>
+                            <form asp-action="Eliminar" asp-route-id="@c.ClubId" method="post" onsubmit="return confirm('¿Desea eliminar este club? También se eliminarán sus registros.');">
+                                <button type="submit">Eliminar</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+    }
+</section>
